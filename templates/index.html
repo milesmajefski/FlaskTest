@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <title>Templating in Flask</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  </head>
+  <body>
+    <h1>Hello {{ user }}!</h1>
+    <p id="title">Welcome to the Flask To Do App!</p>
+    <ol>
+      {%for todo in data['todos']%}  
+        <li>{{todo.title}}: {{todo.detail}}</li> 
+      {%endfor%}
+    </ol>
+
+    <form action="/todos/add" method="post">
+      Title:<br>
+      <input type="text" name="Title"><br>
+      Detail:<br>
+      <input type="text" name="Detail">
+      <input type="submit" name="Submit">
+    </form>
+
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  </body>
+</html>
