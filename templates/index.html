@@ -7,7 +7,7 @@
     <h1>Hello {{ user }}!</h1>
     <p id="title">Welcome to the Flask To Do App!</p>
     <ol>
-      {%for todo in data['todos']%}  
+      {%for todo in todos%}  
         <li>{{todo.title}}: {{todo.detail}}</li> 
       {%endfor%}
     </ol>
@@ -19,6 +19,19 @@
       <input type="text" name="Detail">
       <input type="submit" name="Submit">
     </form>
+
+    <table id="todos">
+      <tr>
+        <th>Title</th>
+        <th>Details</th>
+      </tr>
+      {%for title, details in imported_data%}
+      <tr>
+        <td>{{title}}</td>
+        <td>{{details}}</td>
+      </tr>
+      {%endfor%}
+    </table>
 
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>

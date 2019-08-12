@@ -1,4 +1,11 @@
+"""
+repo: 
+https://github.com/milesmajefski/FlaskTest.git
+
+"""
+
 import os
+from collections import namedtuple
 from flask import Flask, render_template, send_from_directory, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 import todo_model
@@ -11,18 +18,31 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 import_filename = 'import.csv'
+imported_data = []
 
 def chk_import():
     if (os.path.isfile(import_filename)):
         print('Found import file')
-        with open(import_filename, 'r') as fh:
-            print(fh.read())
+        do_import()        
     else:
         print('Didn\'t find file!')
 
 
+Row = namedtuple('Row', ['title', 'details'])
+
+def do_import():
+    with open(import_filename, 'r', newline='') as fh:
+        reader = csv.reader(fh)
+        # reading into list of named tuples
+        header = next(reader)
+        for title, details in reader:
+            imported_data.append(Row(title, details))
+        print("len of data", len(imported_data))
+
+
 class HttpException(Exception):
-    pass
+    def __repr__(self):
+        return 'HttpException()'
 
 
 @app.errorhandler(HttpException)
@@ -53,7 +73,11 @@ def favicon():
 
 @app.route("/")
 def main_page():
-    return render_template('index.html', user='Somebody', data={'todos': todo_model.get_todos()})
+    return render_template('index.html', 
+        user='Somebody', 
+        todos=todo_model.get_todos(), 
+        imported_data=imported_data
+        )
 
 
 if __name__ == "__main__":
